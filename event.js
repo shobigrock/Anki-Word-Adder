@@ -1,26 +1,12 @@
 'use strict';
 
 {
-  // インストール時に実行(右クリック時のメニュー追加)
+  // インストール時に実行
   chrome.runtime.onInstalled.addListener(() => {
-    const parent = chrome.contextMenus.create({  
-      id: 'parent',
-      title: 'Anki Word Adder'
-    });
     chrome.contextMenus.create({
-      id: 'child1',
-      parentId: 'parent',
-      title: '選択単語を登録デッキ1に追加'
-    });
-    chrome.contextMenus.create({
-      id: 'child2',
-      parentId: 'parent',
-      title: '子メニュー2'
-    });
-    chrome.contextMenus.create({
-      id: 'child3',
-      parentId: 'parent',
-      title: '子メニュー3'
+      id: 'addToAnki',
+      title: 'Ankiに追加',
+      contexts: ['selection']  // 選択範囲に対してのみメニューを表示
     });
   });
 
@@ -32,8 +18,8 @@
       
       // ここで選択されたテキストを使用して処理を行う
       // 例: Ankiに追加する関数を呼び出すなど
-      if (item.menuItemId === 'child1') {
-        addToAnki(selectedText, 'word on thesis');
+      if (item.menuItemId === 'addToAnki') {
+        addToAnki(selectedText, 'words on thesis');
       }
     }
   });
@@ -41,26 +27,31 @@
   async function sendToAnki(text, definition, example, deck) {
     const ankiConnectUrl = 'http://localhost:8765';
     const note = {
-      deckName: deck,
-      modelName: 'Basic',
-      fields: {
-        Front: text,
-        Back: `定義: ${definition}\n\n例文: ${example}`
+      "deckName": deck,
+      "modelName": 'Basic',
+      "fields": {
+        "Front": text,
+        "Back": `${definition}`
       },
-      options: {
-        allowDuplicate: false,
-        duplicateScope: 'deck'
+      "options": {
+        "allowDuplicate": false,
+        "duplicateScope": 'deck'
       },
-      tags: ['AnkiWordAdder']
+      "tags": ['AnkiWordAdder']
     };
+    // キーフィールドの追加（必要に応じて）
+    if (!note.fields.Key) {
+        note.fields.Key = text; // または適切なキー値
+    }
   
     const payload = {
-      action: 'addNote',
-      version: 6,
-      params: {
-        note: note
+      "action": 'addNote',
+      "version": 6,
+      "params": {
+        "note": note
       }
     };
+    console.log('Ankiに送信するノート:', note);
   
     try {
       const response = await fetch(ankiConnectUrl, {

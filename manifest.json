@@ -12,9 +12,11 @@
     "activeTab", 
     "scripting", 
     "contextMenus",
+    "notifications"
+  ],
+  "host_permissions": [
     "http://*/",
     "https://*/",
-    "notifications",
     "http://localhost:8765/"
   ],
   "icons": {
@@ -22,13 +24,7 @@
     "128": "icon_128.png"
   },
   "background": {
-    "scripts": ["event.js"],
-    "persistent": false
-  },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
-    }
-  ]
+    "service_worker": "event.js",
+    "type": "module"
+  }
 }
