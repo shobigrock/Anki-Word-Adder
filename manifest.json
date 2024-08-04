@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Anki Word Adder",
+  "description": "Add selected words to Anki with Japanese translation",
+  "version": "1.0",
+  "action": {
+    "default_icon": "icon.png",
+    "default_title": "Anki Word Adder",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["activeTab", "scripting"],
+  "background": {
+    "scripts": ["event.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
