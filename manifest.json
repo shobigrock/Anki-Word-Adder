@@ -8,7 +8,19 @@
     "default_title": "Anki Word Adder",
     "default_popup": "popup.html"
   },
-  "permissions": ["activeTab", "scripting"],
+  "permissions": [
+    "activeTab", 
+    "scripting", 
+    "contextMenus",
+    "http://*/",
+    "https://*/",
+    "notifications",
+    "http://localhost:8765/"
+  ],
+  "icons": {
+    "16": "icon.png",
+    "128": "icon_128.png"
+  },
   "background": {
     "scripts": ["event.js"],
     "persistent": false
